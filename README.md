@@ -6,12 +6,6 @@ This Ansible collection provides modules to interact with the Zoho Books API, en
 
 The `zaepho.zohobooks` collection provides a simple and efficient way to automate interactions with Zoho Books, a cloud-based accounting software. This collection enables you to manage your Zoho Books resources through Ansible playbooks, making it easy to integrate accounting workflows into your automation pipelines.
 
-## Code of Conduct
-
-We follow the [Ansible Code of Conduct](https://docs.ansible.com/ansible/devel/community/code_of_conduct.html) in all our interactions within this project.
-
-If you encounter abusive behavior, please refer to the [policy violations](https://docs.ansible.com/ansible/devel/community/code_of_conduct.html#policy-violations) section of the Code for information on how to raise a complaint.
-
 ## Features
 
 Currently implemented modules:
@@ -41,18 +35,6 @@ Currently implemented modules:
   - Read-only operations for item queries
   - Environment variable support for credentials
 
-## Contributing to this collection
-
-<!--Describe how the community can contribute to your collection. At a minimum, fill up and include the CONTRIBUTING.md file containing how and where users can create issues to report problems or request features for this collection. List contribution requirements, including preferred workflows and necessary testing, so you can benefit from community PRs. If you are following general Ansible contributor guidelines, you can link to - [Ansible Community Guide](https://docs.ansible.com/ansible/devel/community/index.html). List the current maintainers (contributors with write or higher access to the repository). The following can be included:-->
-
-The content of this collection is made by people like you, a community of individuals collaborating on making the world better through developing automation software.
-
-We are actively accepting new contributors and all types of contributions are very welcome.
-
-Don't know how to start? Refer to the [Ansible community guide](https://docs.ansible.com/ansible/devel/community/index.html)!
-
-Want to submit code changes? Take a look at the [Quick-start development guide](https://docs.ansible.com/ansible/devel/community/create_pr_quick_start.html).
-
 ### Testing
 
 Before submitting changes, please run the test suite locally. See [TESTING.md](TESTING.md) for detailed instructions.
@@ -80,18 +62,7 @@ We also use the following guidelines:
 
 The current maintainers are listed in the [MAINTAINERS](MAINTAINERS) file. If you have questions or need help, feel free to mention them in the proposals.
 
-To learn how to maintain/become a maintainer of this collection, refer to the [Maintainer guidelines](https://docs.ansible.com/ansible/devel/community/maintainers.html).
-
-It is necessary for maintainers of this collection to be subscribed to:
-
-* The collection itself (the `Watch` button -> `All Activity` in the upper right corner of the repository's homepage).
-* The [news-for-maintainers repository](https://github.com/ansible-collections/news-for-maintainers).
-
-They also should be subscribed to Ansible's [The Bullhorn newsletter](https://docs.ansible.com/ansible/devel/community/communication.html#the-bullhorn).
-
 ## Governance
-
-<!--Describe how the collection is governed. Here can be the following text:-->
 
 The process of decision making in this collection is based on discussing and finding consensus among participants.
 
@@ -109,7 +80,8 @@ Every voice is important. If you have something on your mind, create an issue or
 ## External requirements
 
 This collection requires:
-- Access to Zoho Books API (https://books.zoho.com)
+
+- Access to Zoho Books API (<https://books.zoho.com>)
 - Valid Zoho Books API credentials
 - Network connectivity to Zoho Books API endpoints
 
@@ -155,6 +127,7 @@ collections:
 The collection supports authentication via parameters or environment variables:
 
 **Environment Variables (recommended):**
+
 ```bash
 export ZOHO_ORGANIZATION_ID="your_organization_id"
 export ZOHO_ACCESS_TOKEN="your_access_token"
@@ -162,6 +135,7 @@ export ZOHO_API_DOMAIN="https://books.zoho.com"  # Optional, defaults to https:/
 ```
 
 **Playbook Parameters:**
+
 ```yaml
 - name: Example task
   zaepho.zohobooks.zohobooks_account:
@@ -351,6 +325,7 @@ export ZOHO_API_DOMAIN="https://books.zoho.com"  # Optional, defaults to https:/
 **Current Version: 0.2.0** (Development)
 
 ### Completed
+
 - `zohobooks_account` module for managing chart of accounts
 - `zohobooks_account_info` module for retrieving account information
 - `zohobooks_item` module for managing items (goods, services, digital services)
@@ -362,12 +337,10 @@ export ZOHO_API_DOMAIN="https://books.zoho.com"  # Optional, defaults to https:/
 - Modern Python 3.6+ support with f-strings and type hints ready
 
 ### Planned Features
+
 - Additional modules for:
   - Customers
-  - Invoices
-  - Expenses
-  - Bills
-  - Payments
+  - Vendors
 - Enhanced error handling and validation
 - Comprehensive test coverage
 - Documentation improvements
@@ -382,10 +355,12 @@ Complete module documentation is available at:
 - Local documentation can be built using `docs/build.sh` (see [docs/README.md](docs/README.md))
 
 ### Zoho Books API
+
 - [Zoho Books API Documentation](https://www.zoho.com/books/api/v3/)
 - [Zoho Books Developer Console](https://api-console.zoho.com/)
 
 ### Ansible Resources
+
 - [Ansible user guide](https://docs.ansible.com/ansible/devel/user_guide/index.html)
 - [Ansible developer guide](https://docs.ansible.com/ansible/devel/dev_guide/index.html)
 - [Ansible collections requirements](https://docs.ansible.com/ansible/devel/community/collection_contributors/collection_requirements.html)
@@ -402,4 +377,5 @@ See [LICENSE](LICENSE) for the full license text.
 Kevin Colby ([@zaepho](https://github.com/zaepho))
 
 ## AI Assistance Disclosure
+
 Portions of this code were generated or refined with the assistance of generative AI tools. All AI-generated code was reviewed, tested, and modified by the project author(s) to ensure accuracy and functionality.
