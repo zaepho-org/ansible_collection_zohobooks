@@ -1,0 +1,6 @@
+---
+minor_changes:
+  - Added comprehensive test.sh script that mirrors GitHub Actions CI workflow for local testing.
+  - Added Makefile with convenient targets for building, testing, and documentation tasks.
+  - Added TESTING.md guide with detailed instructions for running tests locally.
+  - Updated README.md with quick testing commands and reference to testing guide.

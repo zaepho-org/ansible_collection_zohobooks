@@ -53,6 +53,23 @@ Don't know how to start? Refer to the [Ansible community guide](https://docs.ans
 
 Want to submit code changes? Take a look at the [Quick-start development guide](https://docs.ansible.com/ansible/devel/community/create_pr_quick_start.html).
 
+### Testing
+
+Before submitting changes, please run the test suite locally. See [TESTING.md](TESTING.md) for detailed instructions.
+
+Quick test commands:
+
+```bash
+# Run sanity tests
+make sanity
+
+# Build and test
+make build && make test
+
+# Build documentation
+make docs
+```
+
 We also use the following guidelines:
 
 * [Collection review checklist](https://docs.ansible.com/ansible/devel/community/collection_contributors/collection_reviewing.html)

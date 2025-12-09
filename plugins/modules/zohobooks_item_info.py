@@ -112,11 +112,11 @@ EXAMPLES = r'''
 
 - name: Display item information
   debug:
-    var: item.items
+    var: item.zohobooks_items
 '''
 
 RETURN = r'''
-items:
+zohobooks_items:
     description: List of items matching the criteria
     returned: always
     type: list
@@ -306,7 +306,7 @@ def main():
 
     result = {
         'changed': False,
-        'items': items,
+        'zohobooks_items': items,
         'count': len(items)
     }
 
