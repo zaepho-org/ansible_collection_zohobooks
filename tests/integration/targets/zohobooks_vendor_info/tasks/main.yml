@@ -1,0 +1,185 @@
+---
+# Integration tests for zohobooks_vendor_info module
+
+- name: Set test vendor names
+  set_fact:
+    test_vendor_1: "Test Vendor Info 1 {{ 999999999 | random }}"
+    test_vendor_2: "Test Vendor Info 2 {{ 999999999 | random }}"
+
+- block:
+    # Setup: Create test vendors
+    - name: Create first test vendor
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_1 }}"
+        company_name: "Test Company 1"
+        vendor_sub_type: "business"
+        email: "vendor1@example.com"
+        phone: "555-0001"
+        state: present
+      register: vendor1
+
+    - name: Create second test vendor
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_2 }}"
+        company_name: "Test Company 2"
+        vendor_sub_type: "individual"
+        email: "vendor2@example.com"
+        phone: "555-0002"
+        state: present
+      register: vendor2
+
+    - name: Mark second vendor as inactive
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_2 }}"
+        state: inactive
+
+    # Test 1: Get all vendors
+    - name: Get all vendors
+      zaepho.zohobooks.zohobooks_vendor_info:
+      register: result
+
+    - name: Verify we got vendors
+      assert:
+        that:
+          - result.count > 0
+          - result.vendors is defined
+          - result.vendors is iterable
+          - not result.changed
+
+    # Test 2: Get vendor by name
+    - name: Get vendor by name
+      zaepho.zohobooks.zohobooks_vendor_info:
+        contact_name: "{{ test_vendor_1 }}"
+      register: result
+
+    - name: Verify correct vendor was returned
+      assert:
+        that:
+          - result.count == 1
+          - result.vendors[0].contact_name == test_vendor_1
+          - result.vendors[0].company_name == "Test Company 1"
+          - result.vendors[0].email == "vendor1@example.com"
+          - result.vendors[0].contact_type == "vendor"
+          - not result.changed
+
+    # Test 3: Get vendor by ID
+    - name: Get vendor by ID
+      zaepho.zohobooks.zohobooks_vendor_info:
+        contact_id: "{{ vendor1.vendor.contact_id }}"
+      register: result
+
+    - name: Verify correct vendor was returned by ID
+      assert:
+        that:
+          - result.count == 1
+          - result.vendors[0].contact_id == vendor1.vendor.contact_id
+          - result.vendors[0].contact_name == test_vendor_1
+          - not result.changed
+
+    # Test 4: Get non-existent vendor by name
+    - name: Get non-existent vendor by name
+      zaepho.zohobooks.zohobooks_vendor_info:
+        contact_name: "Non-Existent Vendor {{ 999999999 | random }}"
+      register: result
+
+    - name: Verify no vendors returned
+      assert:
+        that:
+          - result.count == 0
+          - result.vendors | length == 0
+          - not result.changed
+
+    # Test 5: Get non-existent vendor by ID
+    - name: Get non-existent vendor by ID
+      zaepho.zohobooks.zohobooks_vendor_info:
+        contact_id: "99999999999"
+      register: result
+
+    - name: Verify no vendors returned for invalid ID
+      assert:
+        that:
+          - result.count == 0
+          - result.vendors | length == 0
+          - not result.changed
+
+    # Test 6: Filter active vendors
+    - name: Get active vendors
+      zaepho.zohobooks.zohobooks_vendor_info:
+        filter_by: "Status.Active"
+      register: result
+
+    - name: Verify active vendor is in results
+      assert:
+        that:
+          - result.count > 0
+          - test_vendor_1 in (result.vendors | map(attribute='contact_name') | list)
+          - not result.changed
+
+    # Test 7: Filter inactive vendors
+    - name: Get inactive vendors
+      zaepho.zohobooks.zohobooks_vendor_info:
+        filter_by: "Status.Inactive"
+      register: result
+
+    - name: Verify inactive vendor is in results
+      assert:
+        that:
+          - test_vendor_2 in (result.vendors | map(attribute='contact_name') | list)
+          - not result.changed
+
+    # Test 8: Filter all vendors
+    - name: Get all vendors with filter
+      zaepho.zohobooks.zohobooks_vendor_info:
+        filter_by: "Status.All"
+      register: result
+
+    - name: Verify both vendors are in results
+      assert:
+        that:
+          - result.count > 0
+          - test_vendor_1 in (result.vendors | map(attribute='contact_name') | list)
+          - test_vendor_2 in (result.vendors | map(attribute='contact_name') | list)
+          - not result.changed
+
+    # Test 9: Test check mode
+    - name: Get vendor in check mode
+      zaepho.zohobooks.zohobooks_vendor_info:
+        contact_name: "{{ test_vendor_1 }}"
+      check_mode: true
+      register: result
+
+    - name: Verify check mode works
+      assert:
+        that:
+          - not result.changed
+          - result.count == 1
+
+    # Test 10: Verify return structure
+    - name: Get vendor for structure verification
+      zaepho.zohobooks.zohobooks_vendor_info:
+        contact_name: "{{ test_vendor_1 }}"
+      register: result
+
+    - name: Verify return value structure
+      assert:
+        that:
+          - "'vendors' in result"
+          - "'count' in result"
+          - "'changed' in result"
+          - result.vendors is iterable
+          - result.count is number
+          - result.changed is boolean
+
+  always:
+    # Cleanup: Delete test vendors
+    - name: Delete first test vendor
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_1 }}"
+        state: absent
+      ignore_errors: true
+
+    - name: Delete second test vendor
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_2 }}"
+        state: absent
+      ignore_errors: true

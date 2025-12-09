@@ -1,0 +1,13 @@
+---
+major_changes:
+  - Added zohobooks_vendor module for managing Zoho Books vendors with support for create, update, delete, activate, and deactivate operations.
+  - Added zohobooks_vendor_info module for retrieving vendor information with support for filtering by name, ID, or status.
+  - Vendor modules support comprehensive contact information including billing addresses, payment terms, and custom fields.
+
+minor_changes:
+  - zohobooks_vendor module supports both individual and business vendor types via vendor_sub_type parameter.
+  - zohobooks_vendor module provides support for payment terms configuration with customizable labels.
+  - zohobooks_vendor_info module supports filtering vendors by status (Active, Inactive, All).
+  - Both vendor modules follow the same authentication and environment variable patterns as other collection modules.
+  - Vendor modules support mutually exclusive parameters for different query methods (contact_name, contact_id).
+  - Added comprehensive integration tests for vendor modules in tests/integration/targets/.

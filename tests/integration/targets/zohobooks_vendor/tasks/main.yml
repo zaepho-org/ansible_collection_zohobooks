@@ -1,0 +1,233 @@
+---
+# Integration tests for zohobooks_vendor module
+
+- name: Set test vendor name
+  set_fact:
+    test_vendor_name: "Test Vendor {{ 999999999 | random }}"
+    test_vendor_company: "Test Company {{ 999999999 | random }}"
+
+- block:
+    # Test 1: Create a new vendor
+    - name: Create a new vendor
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_name }}"
+        company_name: "{{ test_vendor_company }}"
+        vendor_sub_type: "business"
+        email: "test@example.com"
+        phone: "555-1234"
+        payment_terms: 30
+        payment_terms_label: "Net 30"
+        state: present
+      register: result
+
+    - name: Verify vendor was created
+      assert:
+        that:
+          - result.changed
+          - result.vendor.contact_name == test_vendor_name
+          - result.vendor.company_name == test_vendor_company
+          - result.vendor.contact_type == "vendor"
+          - result.vendor.email == "test@example.com"
+          - result.vendor.payment_terms == 30
+          - result.msg == "Vendor created successfully"
+
+    # Test 2: Create vendor again (idempotency)
+    - name: Create vendor again (should not change)
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_name }}"
+        company_name: "{{ test_vendor_company }}"
+        vendor_sub_type: "business"
+        email: "test@example.com"
+        phone: "555-1234"
+        payment_terms: 30
+        payment_terms_label: "Net 30"
+        state: present
+      register: result
+
+    - name: Verify vendor was not changed
+      assert:
+        that:
+          - not result.changed
+          - result.vendor.contact_name == test_vendor_name
+          - result.msg == "Vendor already exists with correct parameters"
+
+    # Test 3: Update vendor
+    - name: Update vendor email
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_name }}"
+        email: "newemail@example.com"
+        payment_terms: 45
+        state: present
+      register: result
+
+    - name: Verify vendor was updated
+      assert:
+        that:
+          - result.changed
+          - result.vendor.contact_name == test_vendor_name
+          - result.vendor.email == "newemail@example.com"
+          - result.vendor.payment_terms == 45
+          - result.msg == "Vendor updated successfully"
+
+    # Test 4: Test check mode for update
+    - name: Update vendor in check mode
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_name }}"
+        email: "checkmode@example.com"
+        state: present
+      check_mode: true
+      register: result
+
+    - name: Verify check mode indicates change
+      assert:
+        that:
+          - result.changed
+          - result.msg == "Vendor would be updated"
+
+    # Test 5: Verify check mode didn't actually update
+    - name: Get vendor to verify check mode didn't update
+      zaepho.zohobooks.zohobooks_vendor_info:
+        contact_name: "{{ test_vendor_name }}"
+      register: result
+
+    - name: Verify vendor email wasn't changed
+      assert:
+        that:
+          - result.vendors[0].email == "newemail@example.com"
+
+    # Test 6: Mark vendor as inactive
+    - name: Mark vendor as inactive
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_name }}"
+        state: inactive
+      register: result
+
+    - name: Verify vendor was marked inactive
+      assert:
+        that:
+          - result.changed
+          - result.vendor.status == "inactive"
+          - result.msg == "Vendor marked as inactive"
+
+    # Test 7: Mark inactive vendor as inactive again (idempotency)
+    - name: Mark inactive vendor as inactive again
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_name }}"
+        state: inactive
+      register: result
+
+    - name: Verify no change
+      assert:
+        that:
+          - not result.changed
+          - result.msg == "Vendor is already inactive"
+
+    # Test 8: Mark vendor as active
+    - name: Mark vendor as active
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_name }}"
+        state: active
+      register: result
+
+    - name: Verify vendor was marked active
+      assert:
+        that:
+          - result.changed
+          - result.vendor.status == "active"
+          - result.msg == "Vendor marked as active"
+
+    # Test 9: Create vendor with billing address
+    - name: Create vendor with billing address
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_name }} Address Test"
+        company_name: "Address Test Company"
+        vendor_sub_type: "business"
+        billing_address:
+          address: "123 Main Street"
+          city: "New York"
+          state: "NY"
+          zip: "10001"
+          country: "USA"
+        state: present
+      register: result
+
+    - name: Verify vendor with address was created
+      assert:
+        that:
+          - result.changed
+          - result.vendor.billing_address.address == "123 Main Street"
+          - result.vendor.billing_address.city == "New York"
+
+  always:
+    # Cleanup: Delete test vendors
+    - name: Delete test vendor
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_name }}"
+        state: absent
+      ignore_errors: true
+
+    - name: Delete test vendor with address
+      zaepho.zohobooks.zohobooks_vendor:
+        contact_name: "{{ test_vendor_name }} Address Test"
+        state: absent
+      ignore_errors: true
+
+# Test 10: Delete vendor
+- name: Create vendor for deletion test
+  zaepho.zohobooks.zohobooks_vendor:
+    contact_name: "Delete Test Vendor"
+    company_name: "Delete Test Company"
+    vendor_sub_type: "business"
+    state: present
+  register: result
+
+- name: Delete the vendor
+  zaepho.zohobooks.zohobooks_vendor:
+    contact_name: "Delete Test Vendor"
+    state: absent
+  register: result
+
+- name: Verify vendor was deleted
+  assert:
+    that:
+      - result.changed
+      - result.msg == "Vendor deleted successfully"
+
+# Test 11: Delete non-existent vendor (idempotency)
+- name: Delete non-existent vendor
+  zaepho.zohobooks.zohobooks_vendor:
+    contact_name: "Non-Existent Vendor"
+    state: absent
+  register: result
+
+- name: Verify no change for non-existent vendor
+  assert:
+    that:
+      - not result.changed
+      - result.msg == "Vendor does not exist"
+
+# Test 12: Check mode for creation
+- name: Create vendor in check mode
+  zaepho.zohobooks.zohobooks_vendor:
+    contact_name: "Check Mode Vendor"
+    company_name: "Check Mode Company"
+    vendor_sub_type: "business"
+    state: present
+  check_mode: true
+  register: result
+
+- name: Verify check mode indicates creation
+  assert:
+    that:
+      - result.changed
+      - result.msg == "Vendor would be created"
+
+- name: Verify vendor wasn't actually created
+  zaepho.zohobooks.zohobooks_vendor_info:
+    contact_name: "Check Mode Vendor"
+  register: result
+
+- name: Verify vendor doesn't exist
+  assert:
+    that:
+      - result.count == 0

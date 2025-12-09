@@ -35,6 +35,21 @@ Currently implemented modules:
   - Read-only operations for item queries
   - Environment variable support for credentials
 
+- **zohobooks_vendor**: Manage Zoho Books vendors
+  - Create, update, and delete vendors
+  - Support for individual and business vendor types
+  - Billing address and contact information management
+  - Payment terms configuration
+  - Activate/deactivate vendors
+  - Idempotent operations
+  - Environment variable support for credentials
+
+- **zohobooks_vendor_info**: Retrieve vendor information from Zoho Books
+  - Get all vendors or filter by name or ID
+  - Filter vendors by status (active/inactive)
+  - Read-only operations for vendor queries
+  - Environment variable support for credentials
+
 ### Testing
 
 Before submitting changes, please run the test suite locally. See [TESTING.md](TESTING.md) for detailed instructions.
