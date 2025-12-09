@@ -357,6 +357,13 @@ export ZOHO_API_DOMAIN="https://books.zoho.com"  # Optional, defaults to https:/
 
 ## Documentation and Resources
 
+### Collection Documentation
+
+Complete module documentation is available at:
+
+- **[Collection Documentation](https://zaepho-org.github.io/ansible_collection_zohobooks/)** (GitHub Pages)
+- Local documentation can be built using `docs/build.sh` (see [docs/README.md](docs/README.md))
+
 ### Zoho Books API
 - [Zoho Books API Documentation](https://www.zoho.com/books/api/v3/)
 - [Zoho Books Developer Console](https://api-console.zoho.com/)

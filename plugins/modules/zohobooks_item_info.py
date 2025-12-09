@@ -28,7 +28,6 @@ options:
             - Can also be set via ZOHO_ACCESS_TOKEN environment variable
         required: false
         type: str
-        no_log: true
     name:
         description:
             - Name of the item to retrieve

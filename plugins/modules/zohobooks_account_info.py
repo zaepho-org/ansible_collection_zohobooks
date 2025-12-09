@@ -28,7 +28,6 @@ options:
             - Can also be set via ZOHO_ACCESS_TOKEN environment variable
         required: false
         type: str
-        no_log: true
     account_name:
         description:
             - Name of the account to retrieve
