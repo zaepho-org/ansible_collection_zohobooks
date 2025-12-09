@@ -3,11 +3,11 @@
 
 namespace: zaepho
 name: zohobooks
-version: 0.1.0
+version: 0.2.0
 readme: README.md
 authors:
   - Kevin Colby (github.com/zaepho)
-description: null
+description: This Ansible collection provides modules to interact with the Zoho Books API, enabling automation of accounting and financial management tasks.
 license_file: LICENSE
 tags:
 # tags so people can search for collections https://galaxy.ansible.com/search

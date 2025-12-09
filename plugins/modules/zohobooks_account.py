@@ -11,7 +11,7 @@ DOCUMENTATION = r'''
 ---
 module: zohobooks_account
 short_description: Manage ZohoBooks chart of accounts
-version_added: "1.0.0"
+version_added: "0.1.0"
 description:
     - Create, update, or delete accounts in ZohoBooks chart of accounts
     - Idempotent operations based on account name
@@ -28,7 +28,6 @@ options:
             - Can also be set via ZOHO_ACCESS_TOKEN environment variable
         required: false
         type: str
-        no_log: true
     account_name:
         description:
             - Name of the account
@@ -91,7 +90,7 @@ options:
         type: str
         default: 'https://books.zoho.com'
 author:
-    - Your Name
+    - Kevin Colby (@zaepho)
 '''
 
 EXAMPLES = r'''
@@ -177,7 +176,7 @@ class ZohoBooksAccount:
         self.token = module.params['access_token']
         self.api_domain = module.params['api_domain']
         self.base_url = f"{self.api_domain}/api/v3"
-        
+
     def _make_request(self, endpoint, method='GET', data=None):
         """Make HTTP request to ZohoBooks API"""
         url = f"{self.base_url}/{endpoint}"
@@ -185,15 +184,15 @@ class ZohoBooksAccount:
             'Authorization': f'Zoho-oauthtoken {self.token}',
             'Content-Type': 'application/json'
         }
-        
+
         params = {'organization_id': self.org_id}
         if '?' in url:
             url += '&' + '&'.join([f"{k}={v}" for k, v in params.items()])
         else:
             url += '?' + '&'.join([f"{k}={v}" for k, v in params.items()])
-        
+
         body = json.dumps(data) if data else None
-        
+
         resp, info = fetch_url(
             self.module,
             url,
@@ -201,7 +200,7 @@ class ZohoBooksAccount:
             data=body,
             headers=headers
         )
-        
+
         if info['status'] not in [200, 201]:
             error_msg = f"API request failed: {info['status']}"
             if resp:
@@ -211,28 +210,28 @@ class ZohoBooksAccount:
                 except:
                     pass
             self.module.fail_json(msg=error_msg, status=info['status'])
-        
+
         if resp:
             return json.loads(resp.read())
         return {}
-    
+
     def get_account_by_name(self, account_name):
         """Find account by name"""
         response = self._make_request('chartofaccounts')
-        
+
         if response.get('code') == 0:
             accounts = response.get('chartofaccounts', [])
             for account in accounts:
                 if account.get('account_name') == account_name:
                     return account
         return None
-    
+
     def create_account(self, params):
         """Create a new account"""
         data = {
             'account_name': params['account_name']
         }
-        
+
         if params.get('account_type'):
             data['account_type'] = params['account_type']
         if params.get('description'):
@@ -241,56 +240,56 @@ class ZohoBooksAccount:
             data['account_code'] = params['account_code']
         if params.get('parent_account_id'):
             data['parent_account_id'] = params['parent_account_id']
-        
+
         response = self._make_request('chartofaccounts', method='POST', data=data)
-        
+
         if response.get('code') == 0:
             return response.get('account')
-        
+
         self.module.fail_json(msg=f"Failed to create account: {response.get('message')}")
-    
+
     def update_account(self, account_id, params):
         """Update an existing account"""
         data = {}
-        
+
         if params.get('account_name'):
             data['account_name'] = params['account_name']
         if params.get('description') is not None:
             data['description'] = params['description']
         if params.get('account_code') is not None:
             data['account_code'] = params['account_code']
-        
+
         if not data:
             return None
-        
+
         endpoint = f'chartofaccounts/{account_id}'
         response = self._make_request(endpoint, method='PUT', data=data)
-        
+
         if response.get('code') == 0:
             return response.get('account')
-        
+
         self.module.fail_json(msg=f"Failed to update account: {response.get('message')}")
-    
+
     def delete_account(self, account_id):
         """Delete an account"""
         endpoint = f'chartofaccounts/{account_id}'
         response = self._make_request(endpoint, method='DELETE')
-        
+
         if response.get('code') == 0:
             return True
-        
+
         self.module.fail_json(msg=f"Failed to delete account: {response.get('message')}")
-    
+
     def needs_update(self, existing, params):
         """Check if account needs updating"""
         if params.get('description') is not None:
             if existing.get('description', '') != params['description']:
                 return True
-        
+
         if params.get('account_code') is not None:
             if existing.get('account_code', '') != params['account_code']:
                 return True
-        
+
         return False
 
 
@@ -322,42 +321,42 @@ def main():
             ('state', 'present', ['account_type'], True)
         ]
     )
-    
+
     # Get credentials from environment variables if not provided
     org_id = module.params['organization_id'] or os.environ.get('ZOHO_ORGANIZATION_ID')
     access_token = module.params['access_token'] or os.environ.get('ZOHO_ACCESS_TOKEN')
     api_domain = module.params['api_domain']
-    
+
     # Override api_domain from environment if not explicitly set and env var exists
     if module.params['api_domain'] == 'https://books.zoho.com' and os.environ.get('ZOHO_API_DOMAIN'):
         api_domain = os.environ.get('ZOHO_API_DOMAIN')
-    
+
     # Validate required credentials
     if not org_id:
         module.fail_json(msg='organization_id is required either as parameter or ZOHO_ORGANIZATION_ID environment variable')
-    
+
     if not access_token:
         module.fail_json(msg='access_token is required either as parameter or ZOHO_ACCESS_TOKEN environment variable')
-    
+
     # Update module params with resolved values
     module.params['organization_id'] = org_id
     module.params['access_token'] = access_token
     module.params['api_domain'] = api_domain
-    
+
     zb = ZohoBooksAccount(module)
     params = module.params
     state = params['state']
     account_name = params['account_name']
-    
+
     # Get existing account
     existing_account = zb.get_account_by_name(account_name)
-    
+
     result = {
         'changed': False,
         'account': None,
         'msg': ''
     }
-    
+
     if state == 'present':
         if existing_account:
             # Account exists - check if update needed
@@ -385,7 +384,7 @@ def main():
                 result['changed'] = True
                 result['account'] = new_account
                 result['msg'] = 'Account created successfully'
-    
+
     elif state == 'absent':
         if existing_account:
             if module.check_mode:
@@ -399,7 +398,7 @@ def main():
         else:
             result['changed'] = False
             result['msg'] = 'Account does not exist'
-    
+
     module.exit_json(**result)
 
 
