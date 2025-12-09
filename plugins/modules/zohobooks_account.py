@@ -207,7 +207,7 @@ class ZohoBooksAccount:
                 try:
                     error_data = json.loads(resp.read())
                     error_msg += f" - {error_data.get('message', '')}"
-                except:
+                except Exception:
                     pass
             self.module.fail_json(msg=error_msg, status=info['status'])
 
