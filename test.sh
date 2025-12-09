@@ -143,20 +143,6 @@ build_collection() {
     echo ""
 }
 
-install_collection() {
-    print_header "Installing Collection"
-
-    # Install collection to proper location for ansible-test
-    if ansible-galaxy collection install ${COLLECTION_NAMESPACE}-${COLLECTION_NAME}-*.tar.gz --force; then
-        print_success "Collection installed to ${COLLECTION_PATH}"
-    else
-        print_error "Failed to install collection"
-        exit 1
-    fi
-
-    echo ""
-}
-
 setup_test_environment() {
     print_header "Setting Up Test Environment"
 
