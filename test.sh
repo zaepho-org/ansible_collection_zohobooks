@@ -196,7 +196,6 @@ run_sanity_tests() {
     cd "ansible_collections/${COLLECTION_NAMESPACE}/${COLLECTION_NAME}"
 
     # Try docker first, fall back to local if docker fails
-    local docker_available=true
     local cmd="ansible-test sanity --docker default"
 
     if [ "$VERBOSE" = "true" ]; then
@@ -256,7 +255,12 @@ run_units_tests() {
     cd "ansible_collections/${COLLECTION_NAMESPACE}/${COLLECTION_NAME}"
 
     # Check if unit tests exist
-    if [ ! "$(ls -A tests/units/*.py 2>/dev/null)" ]; then
+    local has_tests=false
+    if compgen -G "tests/units/*.py" > /dev/null 2>&1; then
+        has_tests=true
+    fi
+
+    if [ "$has_tests" = false ]; then
         print_warning "No unit tests found in tests/units/"
         print_info "Skipping unit tests"
         cd - > /dev/null
@@ -291,7 +295,17 @@ run_integration_tests() {
     cd "ansible_collections/${COLLECTION_NAMESPACE}/${COLLECTION_NAME}"
 
     # Check if integration tests exist
-    if [ ! "$(ls -A tests/integration/targets/ 2>/dev/null | grep -v '.gitkeep')" ]; then
+    local has_tests=false
+    if [ -d tests/integration/targets/ ]; then
+        for file in tests/integration/targets/*; do
+            if [ -e "$file" ] && [ "$(basename "$file")" != ".gitkeep" ]; then
+                has_tests=true
+                break
+            fi
+        done
+    fi
+
+    if [ "$has_tests" = false ]; then
         print_warning "No integration tests found in tests/integration/targets/"
         print_info "Skipping integration tests"
         cd - > /dev/null

@@ -133,3 +133,6 @@ dmypy.json
 
 # ignore collection packages
 zaepho-zohobooks-*.tar.gz
+
+# ignore local collections
+ansible_collections
