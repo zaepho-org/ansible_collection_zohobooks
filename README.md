@@ -22,6 +22,11 @@ Currently implemented modules:
   - Idempotent operations
   - Environment variable support for credentials
 
+- **zohobooks_account_info**: Retrieve chart of accounts information
+  - Get all accounts or filter by name or ID
+  - Read-only operations for account queries
+  - Environment variable support for credentials
+
 - **item_info**: Retrieve item information from Zoho Books (in development)
   - Query items by name or ID
 
@@ -66,8 +71,8 @@ Every voice is important. If you have something on your mind, create an issue or
 
 ## Requirements
 
-- Ansible 2.9 or higher
-- Python 3.6 or higher
+- Ansible 2.16 or higher
+- Python 3.6 or higher (Python 2.7 is not supported)
 - A Zoho Books account with API access
 - Zoho Books API credentials:
   - Organization ID
@@ -176,6 +181,41 @@ export ZOHO_API_DOMAIN="https://books.zoho.com"  # Optional, defaults to https:/
         state: absent
 ```
 
+### Querying Account Information
+
+```yaml
+---
+- name: Get account information
+  hosts: localhost
+  tasks:
+    - name: Get all accounts
+      zaepho.zohobooks.zohobooks_account_info:
+      environment:
+        ZOHO_ORGANIZATION_ID: "{{ zoho_org_id }}"
+        ZOHO_ACCESS_TOKEN: "{{ zoho_token }}"
+      register: all_accounts
+
+    - name: Get specific account by name
+      zaepho.zohobooks.zohobooks_account_info:
+        account_name: "Business Checking"
+      environment:
+        ZOHO_ORGANIZATION_ID: "{{ zoho_org_id }}"
+        ZOHO_ACCESS_TOKEN: "{{ zoho_token }}"
+      register: account
+
+    - name: Get specific account by ID
+      zaepho.zohobooks.zohobooks_account_info:
+        account_id: "987654321"
+      environment:
+        ZOHO_ORGANIZATION_ID: "{{ zoho_org_id }}"
+        ZOHO_ACCESS_TOKEN: "{{ zoho_token }}"
+      register: account
+
+    - name: Display account details
+      debug:
+        msg: "Found {{ account.count }} account(s)"
+```
+
 ### Querying Items
 
 ```yaml
@@ -197,12 +237,14 @@ export ZOHO_API_DOMAIN="https://books.zoho.com"  # Optional, defaults to https:/
 
 ## Roadmap
 
-**Current Version: 0.1.0** (Development)
+**Current Version: 0.2.0** (Development)
 
 ### Completed
 - `zohobooks_account` module for managing chart of accounts
+- `zohobooks_account_info` module for retrieving account information
 - Basic authentication via environment variables and parameters
-- Support for create, update, and delete operations
+- Support for create, update, delete, and read operations
+- Modern Python 3.6+ support with f-strings and type hints ready
 
 ### Planned Features
 - Complete `item_info` module implementation

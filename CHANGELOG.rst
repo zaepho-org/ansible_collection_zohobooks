@@ -4,6 +4,42 @@ zaepho.ZohoBooks Release Notes
 
 .. contents:: Topics
 
+v0.2.0
+======
+
+Release Summary
+---------------
+
+Version 0.2.0 introduces the zohobooks_account_info module for querying account information,
+removes Python 2.7 support, and modernizes the codebase with Python 3.6+ best practices.
+
+Major Changes
+-------------
+
+- Added zohobooks_account_info module for retrieving chart of accounts information with support for filtering by name or ID.
+- Dropped Python 2.7 support - minimum Python version is now 3.6.
+- Refactored all modules to use modern Python f-strings instead of .format() for improved readability and performance.
+- Updated minimum Ansible requirement to 2.16 or higher.
+
+Minor Changes
+-------------
+
+- Both modules now consistently use f-strings for all string formatting operations.
+- Enhanced error handling in zohobooks_account module with better exception specificity (replaced bare except with Exception).
+- Improved code quality with modern Python 3.6+ idioms and best practices.
+- Updated documentation to clarify Python version requirements.
+- zohobooks_account_info module supports mutually exclusive parameters (account_name and account_id).
+
+Bugfixes
+--------
+
+- Fixed PEP8 E722 violation by replacing bare except clause with specific Exception type in zohobooks_account module.
+
+New Modules
+-----------
+
+- zaepho.zohobooks.zohobooks_account_info - Retrieve ZohoBooks chart of accounts information.
+
 v0.1.0
 ======
 

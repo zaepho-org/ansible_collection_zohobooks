@@ -175,21 +175,21 @@ class ZohoBooksAccount:
         self.org_id = module.params['organization_id']
         self.token = module.params['access_token']
         self.api_domain = module.params['api_domain']
-        self.base_url = "{0}/api/v3".format(self.api_domain)
+        self.base_url = f"{self.api_domain}/api/v3"
 
     def _make_request(self, endpoint, method='GET', data=None):
         """Make HTTP request to ZohoBooks API"""
-        url = "{0}/{1}".format(self.base_url, endpoint)
+        url = f"{self.base_url}/{endpoint}"
         headers = {
-            'Authorization': 'Zoho-oauthtoken {0}'.format(self.token),
+            'Authorization': f'Zoho-oauthtoken {self.token}',
             'Content-Type': 'application/json'
         }
 
         params = {'organization_id': self.org_id}
         if '?' in url:
-            url += '&' + '&'.join(["{0}={1}".format(k, v) for k, v in params.items()])
+            url += '&' + '&'.join([f"{k}={v}" for k, v in params.items()])
         else:
-            url += '?' + '&'.join(["{0}={1}".format(k, v) for k, v in params.items()])
+            url += '?' + '&'.join([f"{k}={v}" for k, v in params.items()])
 
         body = json.dumps(data) if data else None
 
@@ -202,11 +202,11 @@ class ZohoBooksAccount:
         )
 
         if info['status'] not in [200, 201]:
-            error_msg = "API request failed: {0}".format(info['status'])
+            error_msg = f"API request failed: {info['status']}"
             if resp:
                 try:
                     error_data = json.loads(resp.read())
-                    error_msg += " - {0}".format(error_data.get('message', ''))
+                    error_msg += f" - {error_data.get('message', '')}"
                 except Exception:
                     pass
             self.module.fail_json(msg=error_msg, status=info['status'])
@@ -246,7 +246,7 @@ class ZohoBooksAccount:
         if response.get('code') == 0:
             return response.get('account')
 
-        self.module.fail_json(msg="Failed to create account: {0}".format(response.get('message')))
+        self.module.fail_json(msg=f"Failed to create account: {response.get('message')}")
 
     def update_account(self, account_id, params):
         """Update an existing account"""
@@ -262,23 +262,23 @@ class ZohoBooksAccount:
         if not data:
             return None
 
-        endpoint = 'chartofaccounts/{0}'.format(account_id)
+        endpoint = f'chartofaccounts/{account_id}'
         response = self._make_request(endpoint, method='PUT', data=data)
 
         if response.get('code') == 0:
             return response.get('account')
 
-        self.module.fail_json(msg="Failed to update account: {0}".format(response.get('message')))
+        self.module.fail_json(msg=f"Failed to update account: {response.get('message')}")
 
     def delete_account(self, account_id):
         """Delete an account"""
-        endpoint = 'chartofaccounts/{0}'.format(account_id)
+        endpoint = f'chartofaccounts/{account_id}'
         response = self._make_request(endpoint, method='DELETE')
 
         if response.get('code') == 0:
             return True
 
-        self.module.fail_json(msg="Failed to delete account: {0}".format(response.get('message')))
+        self.module.fail_json(msg=f"Failed to delete account: {response.get('message')}")
 
     def needs_update(self, existing, params):
         """Check if account needs updating"""
