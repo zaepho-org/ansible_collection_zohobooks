@@ -1,4 +1,4 @@
-.PHONY: help build install test sanity units integration docs clean all
+.PHONY: help build install test sanity shellcheck units integration docs clean all
 
 # Variables
 COLLECTION_NAMESPACE := zaepho
@@ -22,10 +22,15 @@ install: build ## Build and install the collection locally
 	@ansible-galaxy collection install $(COLLECTION_TARBALL) --force
 	@echo "Collection installed successfully"
 
-test: sanity ## Run default tests (sanity)
+test: shellcheck sanity ## Run default tests (shellcheck + sanity)
 	@echo "Default tests completed"
 
-sanity: ## Run sanity tests
+shellcheck: ## Run shellcheck on test.sh
+	@echo "Running shellcheck..."
+	@shellcheck test.sh || (echo "Shellcheck failed. Install with: sudo apt-get install shellcheck" && exit 1)
+	@echo "Shellcheck passed"
+
+sanity: shellcheck ## Run sanity tests
 	@echo "Running sanity tests..."
 	@./test.sh sanity
 

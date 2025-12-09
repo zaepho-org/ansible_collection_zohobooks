@@ -20,7 +20,6 @@ VERBOSE="${VERBOSE:-false}"
 # Collection information
 COLLECTION_NAMESPACE="zaepho"
 COLLECTION_NAME="zohobooks"
-COLLECTION_PATH="${HOME}/.ansible/collections/ansible_collections/${COLLECTION_NAMESPACE}/${COLLECTION_NAME}"
 
 print_header() {
     echo -e "${BLUE}======================================${NC}"

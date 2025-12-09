@@ -248,19 +248,22 @@ Create test playbooks in `tests/integration/targets/zohobooks_account/`:
 Run this checklist:
 
 ```bash
-# 1. Run sanity tests
+# 1. Run shellcheck on test.sh
+make shellcheck
+
+# 2. Run sanity tests
 make sanity
 
-# 2. Build collection
+# 3. Build collection
 make build
 
-# 3. Build documentation
+# 4. Build documentation
 make docs
 
-# 4. Ensure changelog fragment exists (if needed)
+# 5. Ensure changelog fragment exists (if needed)
 ls changelogs/fragments/
 
-# 5. Clean up
+# 6. Clean up
 make clean
 ```
 
@@ -271,8 +274,9 @@ make clean
 | `help` | Show all available targets |
 | `build` | Build collection tarball |
 | `install` | Build and install collection locally |
-| `test` | Run default tests (sanity) |
-| `sanity` | Run sanity tests |
+| `test` | Run default tests (shellcheck + sanity) |
+| `shellcheck` | Run shellcheck on test.sh script |
+| `sanity` | Run sanity tests (includes shellcheck) |
 | `units` | Run unit tests |
 | `integration` | Run integration tests |
 | `all-tests` | Run all tests |
