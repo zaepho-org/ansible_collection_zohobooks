@@ -7,7 +7,7 @@
 Zaepho.Zohobooks
 ================
 
-Collection version 0.2.0
+Collection version 0.2.1
 
 .. contents::
    :local:
@@ -60,6 +60,8 @@ Modules
 * :ansplugin:`zohobooks_account_info module <zaepho.zohobooks.zohobooks_account_info#module>` -- Retrieve ZohoBooks chart of accounts information
 * :ansplugin:`zohobooks_item module <zaepho.zohobooks.zohobooks_item#module>` -- Manage ZohoBooks items
 * :ansplugin:`zohobooks_item_info module <zaepho.zohobooks.zohobooks_item_info#module>` -- Retrieve ZohoBooks items information
+* :ansplugin:`zohobooks_vendor module <zaepho.zohobooks.zohobooks_vendor#module>` -- Manage ZohoBooks vendors
+* :ansplugin:`zohobooks_vendor_info module <zaepho.zohobooks.zohobooks_vendor_info#module>` -- Retrieve ZohoBooks vendor information
 
 .. toctree::
     :maxdepth: 1
@@ -69,3 +71,5 @@ Modules
     zohobooks_account_info_module
     zohobooks_item_module
     zohobooks_item_info_module
+    zohobooks_vendor_module
+    zohobooks_vendor_info_module

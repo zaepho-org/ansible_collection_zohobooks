@@ -2,21 +2,37 @@
 
 **Topics**
 
-- <a href="#v0-2-0">v0\.2\.0</a>
+- <a href="#v0-2-1">v0\.2\.1</a>
     - <a href="#release-summary">Release Summary</a>
-    - <a href="#major-changes">Major Changes</a>
     - <a href="#minor-changes">Minor Changes</a>
+- <a href="#v0-2-0">v0\.2\.0</a>
+    - <a href="#release-summary-1">Release Summary</a>
+    - <a href="#major-changes">Major Changes</a>
+    - <a href="#minor-changes-1">Minor Changes</a>
     - <a href="#bugfixes">Bugfixes</a>
     - <a href="#new-modules">New Modules</a>
 - <a href="#v0-1-0">v0\.1\.0</a>
-    - <a href="#release-summary-1">Release Summary</a>
+    - <a href="#release-summary-2">Release Summary</a>
     - <a href="#major-changes-1">Major Changes</a>
-    - <a href="#minor-changes-1">Minor Changes</a>
+    - <a href="#minor-changes-2">Minor Changes</a>
+
+<a id="v0-2-1"></a>
+## v0\.2\.1
+
+<a id="release-summary"></a>
+### Release Summary
+
+Automated publishing to Galaxy
+
+<a id="minor-changes"></a>
+### Minor Changes
+
+* Implemented a Github CI/CD release pipeline to publish to Galaxy
 
 <a id="v0-2-0"></a>
 ## v0\.2\.0
 
-<a id="release-summary"></a>
+<a id="release-summary-1"></a>
 ### Release Summary
 
 Version 0\.2\.0 introduces the zohobooks\_account\_info module for querying account information\,
@@ -36,7 +52,7 @@ removes Python 2\.7 support\, and modernizes the codebase with Python 3\.6\+ bes
 * Updated minimum Ansible requirement to 2\.16 or higher\.
 * Vendor modules support comprehensive contact information including billing addresses\, payment terms\, and custom fields\.
 
-<a id="minor-changes"></a>
+<a id="minor-changes-1"></a>
 ### Minor Changes
 
 * Added Makefile with convenient targets for building\, testing\, and documentation tasks\.
@@ -74,7 +90,7 @@ removes Python 2\.7 support\, and modernizes the codebase with Python 3\.6\+ bes
 <a id="v0-1-0"></a>
 ## v0\.1\.0
 
-<a id="release-summary-1"></a>
+<a id="release-summary-2"></a>
 ### Release Summary
 
 This is the initial release of the zaepho\.zohobooks collection for Ansible\.
@@ -88,7 +104,7 @@ automation of accounting and financial management tasks\.
 * Implemented authentication via environment variables \(ZOHO\_ORGANIZATION\_ID\, ZOHO\_ACCESS\_TOKEN\, ZOHO\_API\_DOMAIN\) and module parameters\.
 * Initial release of the zaepho\.zohobooks collection \([https\://github\.com/zaepho/ansible\_collection\_zohobooks](https\://github\.com/zaepho/ansible\_collection\_zohobooks)\)\.
 
-<a id="minor-changes-1"></a>
+<a id="minor-changes-2"></a>
 ### Minor Changes
 
 * Added check mode support for all modules\.

@@ -4,6 +4,19 @@ zaepho.ZohoBooks Release Notes
 
 .. contents:: Topics
 
+v0.2.1
+======
+
+Release Summary
+---------------
+
+Automated publishing to Galaxy
+
+Minor Changes
+-------------
+
+- Implemented a Github CI/CD release pipeline to publish to Galaxy
+
 v0.2.0
 ======
 

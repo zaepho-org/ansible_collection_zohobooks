@@ -98,9 +98,17 @@ releases:
     - 0.2.0-items-modules.yaml
     - 0.2.0-modernization.yaml
     - 0.2.0-testing-infrastructure.yaml
-    - 0.3.0-vendor-modules.yaml
+    - 0.2.0-vendor-modules.yaml
     modules:
     - description: Retrieve ZohoBooks chart of accounts information.
       name: zohobooks_account_info
       namespace: ''
+    release_date: '2025-12-09'
+  0.2.1:
+    changes:
+      minor_changes:
+      - Implemented a Github CI/CD release pipeline to publish to Galaxy
+      release_summary: Automated publishing to Galaxy
+    fragments:
+    - 0.2.1-release-pipline.yaml
     release_date: '2025-12-09'

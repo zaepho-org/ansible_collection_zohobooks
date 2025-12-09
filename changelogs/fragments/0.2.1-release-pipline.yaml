@@ -1,0 +1,4 @@
+---
+release_summary: Automated publishing to Galaxy
+minor_changes:
+  - Implemented a Github CI/CD release pipeline to publish to Galaxy
