@@ -4,7 +4,6 @@ plugins/modules/zohobooks_item.py compile-2.7!skip  # Python 2.7 not supported
 plugins/modules/zohobooks_item_info.py compile-2.7!skip  # Python 2.7 not supported
 plugins/modules/zohobooks_vendor.py compile-2.7!skip  # Python 2.7 not supported
 plugins/modules/zohobooks_vendor_info.py compile-2.7!skip  # Python 2.7 not supported
-
 plugins/modules/zohobooks_account.py import-2.7!skip  # Python 2.7 not supported
 plugins/modules/zohobooks_account_info.py import-2.7!skip  # Python 2.7 not supported
 plugins/modules/zohobooks_item.py import-2.7!skip  # Python 2.7 not supported
