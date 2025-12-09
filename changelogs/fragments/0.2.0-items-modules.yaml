@@ -1,0 +1,12 @@
+---
+major_changes:
+  - Added zohobooks_item module for managing Zoho Books items with support for create, update, delete, activate, and deactivate operations.
+  - Added zohobooks_item_info module for retrieving item information with support for filtering by name, ID, SKU, or status.
+  - Item modules support inventory tracking with initial stock, reorder levels, and stock rate configuration.
+
+minor_changes:
+  - zohobooks_item module supports goods, services, and digital service product types.
+  - zohobooks_item module provides comprehensive field support including rates, SKU, tax configuration, and account assignments.
+  - zohobooks_item_info module supports filtering items by status (Active, Inactive, All).
+  - Both item modules follow the same authentication and environment variable patterns as account modules.
+  - Item modules support mutually exclusive parameters for different query methods (name, item_id, sku).

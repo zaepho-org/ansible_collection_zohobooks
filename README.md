@@ -27,8 +27,19 @@ Currently implemented modules:
   - Read-only operations for account queries
   - Environment variable support for credentials
 
-- **item_info**: Retrieve item information from Zoho Books (in development)
-  - Query items by name or ID
+- **zohobooks_item**: Manage Zoho Books items
+  - Create, update, and delete items
+  - Support for goods, services, and digital services
+  - Inventory tracking capabilities
+  - Activate/deactivate items
+  - Idempotent operations
+  - Environment variable support for credentials
+
+- **zohobooks_item_info**: Retrieve item information from Zoho Books
+  - Get all items or filter by name, ID, or SKU
+  - Filter items by status (active/inactive)
+  - Read-only operations for item queries
+  - Environment variable support for credentials
 
 ## Contributing to this collection
 
@@ -216,6 +227,65 @@ export ZOHO_API_DOMAIN="https://books.zoho.com"  # Optional, defaults to https:/
         msg: "Found {{ account.count }} account(s)"
 ```
 
+### Managing Items
+
+```yaml
+---
+- name: Manage Zoho Books Items
+  hosts: localhost
+  tasks:
+    - name: Create a goods item
+      zaepho.zohobooks.zohobooks_item:
+        name: "Hard Drive"
+        rate: 120.00
+        description: "500GB Hard Drive"
+        sku: "HD-500GB-001"
+        product_type: "goods"
+        unit: "unit"
+        state: present
+      environment:
+        ZOHO_ORGANIZATION_ID: "{{ zoho_org_id }}"
+        ZOHO_ACCESS_TOKEN: "{{ zoho_token }}"
+
+    - name: Create a service item
+      zaepho.zohobooks.zohobooks_item:
+        name: "Software License"
+        rate: 99.99
+        description: "Annual software license"
+        product_type: "service"
+        state: present
+
+    - name: Create inventory item with stock tracking
+      zaepho.zohobooks.zohobooks_item:
+        name: "Widget A"
+        rate: 25.00
+        sku: "WGT-A-001"
+        product_type: "goods"
+        item_type: "inventory"
+        track_inventory: true
+        initial_stock: 100
+        initial_stock_rate: 20.00
+        reorder_level: 25
+        state: present
+
+    - name: Update an existing item
+      zaepho.zohobooks.zohobooks_item:
+        name: "Hard Drive"
+        description: "Updated - 1TB Hard Drive"
+        rate: 150.00
+        state: present
+
+    - name: Mark item as inactive
+      zaepho.zohobooks.zohobooks_item:
+        name: "Old Product"
+        state: inactive
+
+    - name: Delete an item
+      zaepho.zohobooks.zohobooks_item:
+        name: "Discontinued Item"
+        state: absent
+```
+
 ### Querying Items
 
 ```yaml
@@ -223,16 +293,40 @@ export ZOHO_API_DOMAIN="https://books.zoho.com"  # Optional, defaults to https:/
 - name: Get item information
   hosts: localhost
   tasks:
-    - name: Retrieve item by name
-      zaepho.zohobooks.item_info:
-        name: "Widget"
+    - name: Get all items
+      zaepho.zohobooks.zohobooks_item_info:
       environment:
+        ZOHO_ORGANIZATION_ID: "{{ zoho_org_id }}"
         ZOHO_ACCESS_TOKEN: "{{ zoho_token }}"
-      register: item_result
+      register: all_items
 
-    - name: Display item info
+    - name: Get item by name
+      zaepho.zohobooks.zohobooks_item_info:
+        name: "Hard Drive"
+      environment:
+        ZOHO_ORGANIZATION_ID: "{{ zoho_org_id }}"
+        ZOHO_ACCESS_TOKEN: "{{ zoho_token }}"
+      register: item
+
+    - name: Get item by SKU
+      zaepho.zohobooks.zohobooks_item_info:
+        sku: "HD-500GB-001"
+      environment:
+        ZOHO_ORGANIZATION_ID: "{{ zoho_org_id }}"
+        ZOHO_ACCESS_TOKEN: "{{ zoho_token }}"
+      register: item
+
+    - name: Get all active items
+      zaepho.zohobooks.zohobooks_item_info:
+        filter_by: "Status.Active"
+      environment:
+        ZOHO_ORGANIZATION_ID: "{{ zoho_org_id }}"
+        ZOHO_ACCESS_TOKEN: "{{ zoho_token }}"
+      register: active_items
+
+    - name: Display item details
       debug:
-        var: item_result
+        msg: "Found {{ item.count }} item(s)"
 ```
 
 ## Roadmap
@@ -242,12 +336,15 @@ export ZOHO_API_DOMAIN="https://books.zoho.com"  # Optional, defaults to https:/
 ### Completed
 - `zohobooks_account` module for managing chart of accounts
 - `zohobooks_account_info` module for retrieving account information
+- `zohobooks_item` module for managing items (goods, services, digital services)
+- `zohobooks_item_info` module for retrieving item information
 - Basic authentication via environment variables and parameters
 - Support for create, update, delete, and read operations
+- Inventory tracking support for items
+- Item activation/deactivation
 - Modern Python 3.6+ support with f-strings and type hints ready
 
 ### Planned Features
-- Complete `item_info` module implementation
 - Additional modules for:
   - Customers
   - Invoices
