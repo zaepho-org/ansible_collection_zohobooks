@@ -15,6 +15,8 @@ minor_changes:
   - Updated documentation to clarify Python version requirements.
   - zohobooks_account_info module supports mutually exclusive parameters (account_name and account_id).
   - Both modules now consistently use f-strings for all string formatting operations.
+  - Added complete antsibull-docs documentation system with automated GitHub Pages deployment.
+  - Fixed module documentation schema validation errors by removing invalid no_log field from DOCUMENTATION sections.
 
 bugfixes:
   - Fixed PEP8 E722 violation by replacing bare except clause with specific Exception type in zohobooks_account module.
