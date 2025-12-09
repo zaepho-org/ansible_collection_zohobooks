@@ -1,22 +1,10 @@
-# collection_template
-You can build a new repository for an Ansible Collection using this template by following [Creating a repository from a template](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template). This README.md contains recommended headings for your collection README.md, with comments describing what each section should contain. Once you have created your collection repository, delete this paragraph and the title above it from your README.md.
+# Zoho Books Collection for Ansible
 
-# Foo Collection for Ansible
-<!-- Add CI and code coverage badges here. Samples included below. -->
-[![CI](https://github.com/ansible-collections/REPONAMEHERE/workflows/CI/badge.svg?event=push)](https://github.com/ansible-collections/REPONAMEHERE/actions) [![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/REPONAMEHERE)](https://codecov.io/gh/ansible-collections/REPONAMEHERE)
+This Ansible collection provides modules to interact with the Zoho Books API, enabling automation of accounting and financial management tasks.
 
-<!-- Describe the collection and why a user would want to use it. What does the collection do? -->
+## Overview
 
-## Our mission
-
-<!-- Put your collection's mission statement in here. Example follows. -->
-
-At the `your collection name`, our mission is to produce and maintain simple, flexible,
-and powerful open-source software tailored to `your collection purpose`.
-
-We welcome members from all skill levels to participate actively in our open, inclusive, and vibrant community.
-Whether you are an expert or just beginning your journey with Ansible and `your collection name`,
-you are encouraged to contribute, share insights, and collaborate with fellow enthusiasts!
+The `zaepho.zohobooks` collection provides a simple and efficient way to automate interactions with Zoho Books, a cloud-based accounting software. This collection enables you to manage your Zoho Books resources through Ansible playbooks, making it easy to integrate accounting workflows into your automation pipelines.
 
 ## Code of Conduct
 
@@ -24,20 +12,18 @@ We follow the [Ansible Code of Conduct](https://docs.ansible.com/ansible/devel/c
 
 If you encounter abusive behavior, please refer to the [policy violations](https://docs.ansible.com/ansible/devel/community/code_of_conduct.html#policy-violations) section of the Code for information on how to raise a complaint.
 
-## Communication
+## Features
 
-<!--
-If your collection is not present on the Ansible forum yet, please check out the existing [tags](https://forum.ansible.com/tags) and [groups](https://forum.ansible.com/g) - use what suits your collection. If there is no appropriate tag and group yet, please [request one](https://forum.ansible.com/t/requesting-a-forum-group/503/17).
--->
+Currently implemented modules:
 
-* Join the Ansible forum:
-  * [Get Help](https://forum.ansible.com/c/help/6): get help or help others. Please add appropriate tags if you start new discussions, for example the `YOUR TAG` tag.
-  * [Posts tagged with 'your tag'](https://forum.ansible.com/tag/YOUR_TAG): subscribe to participate in collection/technology-related conversations.
-  * [Refer to your forum group here if exists](https://forum.ansible.com/g/): by joining the team you will automatically get subscribed to the posts tagged with [your group forum tag here](https://forum.ansible.com/tags).
-  * [Social Spaces](https://forum.ansible.com/c/chat/4): gather and interact with fellow enthusiasts.
-  * [News & Announcements](https://forum.ansible.com/c/news/5): track project-wide announcements including social events. The [Bullhorn newsletter](https://docs.ansible.com/ansible/devel/community/communication.html#the-bullhorn), which is used to announce releases and important changes, can also be found here.
+- **zohobooks_account**: Manage Zoho Books chart of accounts
+  - Create, update, and delete accounts
+  - Support for various account types (bank, expense, income, etc.)
+  - Idempotent operations
+  - Environment variable support for credentials
 
-For more information about communication, see the [Ansible communication guide](https://docs.ansible.com/ansible/devel/community/communication.html).
+- **item_info**: Retrieve item information from Zoho Books (in development)
+  - Query items by name or ID
 
 ## Contributing to this collection
 
@@ -78,75 +64,176 @@ The process of decision making in this collection is based on discussing and fin
 
 Every voice is important. If you have something on your mind, create an issue or dedicated discussion and let's discuss it!
 
-## Tested with Ansible
+## Requirements
 
-<!-- List the versions of Ansible the collection has been tested with. Must match what is in galaxy.yml. -->
+- Ansible 2.9 or higher
+- Python 3.6 or higher
+- A Zoho Books account with API access
+- Zoho Books API credentials:
+  - Organization ID
+  - Access Token (OAuth token)
 
 ## External requirements
 
-<!-- List any external resources the collection depends on, for example minimum versions of an OS, libraries, or utilities. Do not list other Ansible collections here. -->
+This collection requires:
+- Access to Zoho Books API (https://books.zoho.com)
+- Valid Zoho Books API credentials
+- Network connectivity to Zoho Books API endpoints
 
-### Supported connections
-<!-- Optional. If your collection supports only specific connection types (such as HTTPAPI, netconf, or others), list them here. -->
+## Installation
 
-## Included content
+### Installing from source
 
-<!-- Galaxy now usually displays full module and plugin docs within the UI. If you don't use Galaxy for your collection, you may need to either describe your plugins etc here, or point to an external docsite to cover that information. -->
+Currently, this collection is in development and not yet published to Ansible Galaxy. To install from source:
 
-## Using this collection
-
-<!--Include some quick examples that cover the most common use cases for your collection content. It can include the following examples of installation and upgrade (change NAMESPACE.COLLECTION_NAME correspondingly):-->
-
-### Installing the Collection from Ansible Galaxy
-
-Before using this collection, you need to install it with the Ansible Galaxy command-line tool:
 ```bash
-ansible-galaxy collection install NAMESPACE.COLLECTION_NAME
+# Clone the repository
+git clone https://github.com/zaepho/ansible_collection_zohobooks.git
+
+# Build the collection
+cd ansible_collection_zohobooks
+ansible-galaxy collection build
+
+# Install the built collection
+ansible-galaxy collection install zaepho-zohobooks-0.1.0.tar.gz
 ```
 
-You can also include it in a `requirements.yml` file and install it with `ansible-galaxy collection install -r requirements.yml`, using the format:
+### Installing from Ansible Galaxy (when available)
+
+Once published, you'll be able to install with:
+
+```bash
+ansible-galaxy collection install zaepho.zohobooks
+```
+
+Or include it in a `requirements.yml` file:
+
 ```yaml
 ---
 collections:
-  - name: NAMESPACE.COLLECTION_NAME
+  - name: zaepho.zohobooks
+    version: ">=0.1.0"
 ```
 
-Note that if you install the collection from Ansible Galaxy, it will not be upgraded automatically when you upgrade the `ansible` package. To upgrade the collection to the latest available version, run the following command:
+## Configuration
+
+### Authentication
+
+The collection supports authentication via parameters or environment variables:
+
+**Environment Variables (recommended):**
 ```bash
-ansible-galaxy collection install NAMESPACE.COLLECTION_NAME --upgrade
+export ZOHO_ORGANIZATION_ID="your_organization_id"
+export ZOHO_ACCESS_TOKEN="your_access_token"
+export ZOHO_API_DOMAIN="https://books.zoho.com"  # Optional, defaults to https://books.zoho.com
 ```
 
-You can also install a specific version of the collection, for example, if you need to downgrade when something is broken in the latest version (please report an issue in this repository). Use the following syntax to install version `0.1.0`:
-
-```bash
-ansible-galaxy collection install NAMESPACE.COLLECTION_NAME:==0.1.0
+**Playbook Parameters:**
+```yaml
+- name: Example task
+  zaepho.zohobooks.zohobooks_account:
+    organization_id: "your_organization_id"
+    access_token: "your_access_token"
+    # ... other parameters
 ```
 
-See [using Ansible collections](https://docs.ansible.com/ansible/devel/user_guide/collections_using.html) for more details.
+## Usage Examples
 
-## Release notes
+### Managing Chart of Accounts
 
-See the [changelog](https://github.com/ansible-collections/REPONAMEHERE/tree/main/CHANGELOG.rst).
+```yaml
+---
+- name: Manage Zoho Books Accounts
+  hosts: localhost
+  tasks:
+    - name: Create a bank account
+      zaepho.zohobooks.zohobooks_account:
+        account_name: "Business Checking"
+        account_type: "bank"
+        account_code: "1001"
+        description: "Primary business checking account"
+        state: present
+      environment:
+        ZOHO_ORGANIZATION_ID: "{{ zoho_org_id }}"
+        ZOHO_ACCESS_TOKEN: "{{ zoho_token }}"
+
+    - name: Create an expense account
+      zaepho.zohobooks.zohobooks_account:
+        account_name: "Office Supplies"
+        account_type: "expense"
+        account_code: "5001"
+        state: present
+
+    - name: Update an account description
+      zaepho.zohobooks.zohobooks_account:
+        account_name: "Business Checking"
+        description: "Updated description for checking account"
+        state: present
+
+    - name: Delete an account
+      zaepho.zohobooks.zohobooks_account:
+        account_name: "Old Account"
+        state: absent
+```
+
+### Querying Items
+
+```yaml
+---
+- name: Get item information
+  hosts: localhost
+  tasks:
+    - name: Retrieve item by name
+      zaepho.zohobooks.item_info:
+        name: "Widget"
+      environment:
+        ZOHO_ACCESS_TOKEN: "{{ zoho_token }}"
+      register: item_result
+
+    - name: Display item info
+      debug:
+        var: item_result
+```
 
 ## Roadmap
 
-<!-- Optional. Include the roadmap for this collection, and the proposed release/versioning strategy so users can anticipate the upgrade/update cycle. -->
+**Current Version: 0.1.0** (Development)
 
-## More information
+### Completed
+- `zohobooks_account` module for managing chart of accounts
+- Basic authentication via environment variables and parameters
+- Support for create, update, and delete operations
 
-<!-- List out where the user can find additional information, such as working group meeting times, slack/IRC channels, or documentation for the product this collection automates. At a minimum, link to: -->
+### Planned Features
+- Complete `item_info` module implementation
+- Additional modules for:
+  - Customers
+  - Invoices
+  - Expenses
+  - Bills
+  - Payments
+- Enhanced error handling and validation
+- Comprehensive test coverage
+- Documentation improvements
 
+## Documentation and Resources
+
+### Zoho Books API
+- [Zoho Books API Documentation](https://www.zoho.com/books/api/v3/)
+- [Zoho Books Developer Console](https://api-console.zoho.com/)
+
+### Ansible Resources
 - [Ansible user guide](https://docs.ansible.com/ansible/devel/user_guide/index.html)
 - [Ansible developer guide](https://docs.ansible.com/ansible/devel/dev_guide/index.html)
 - [Ansible collections requirements](https://docs.ansible.com/ansible/devel/community/collection_contributors/collection_requirements.html)
-- [Ansible community Code of Conduct](https://docs.ansible.com/ansible/devel/community/code_of_conduct.html)
-- [The Bullhorn (the Ansible contributor newsletter)](https://docs.ansible.com/ansible/devel/community/communication.html#the-bullhorn)
-- [Important announcements for maintainers](https://github.com/ansible-collections/news-for-maintainers)
+- [Using Ansible collections](https://docs.ansible.com/ansible/devel/user_guide/collections_using.html)
 
 ## Licensing
 
-<!-- Include the appropriate license information here and a pointer to the full licensing details. If the collection contains modules migrated from the ansible/ansible repo, you must use the same license that existed in the ansible/ansible repo. See the GNU license example below. -->
+This collection is licensed under the GNU General Public License v3.0 or later.
 
-GNU General Public License v3.0 or later.
+See [LICENSE](LICENSE) for the full license text.
 
-See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.
+## Author
+
+Kevin Colby ([@zaepho](https://github.com/zaepho))
