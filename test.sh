@@ -195,20 +195,53 @@ run_sanity_tests() {
 
     cd "ansible_collections/${COLLECTION_NAMESPACE}/${COLLECTION_NAME}"
 
+    # Try docker first, fall back to local if docker fails
+    local docker_available=true
     local cmd="ansible-test sanity --docker default"
 
     if [ "$VERBOSE" = "true" ]; then
         cmd="$cmd -v"
     fi
 
-    print_info "Running: $cmd"
+    print_info "Attempting to run with Docker: $cmd"
     echo ""
 
-    if eval "$cmd"; then
+    # Run and capture output and exit code
+    set +e
+    eval "$cmd" > /tmp/ansible-test-output.log 2>&1
+    local docker_exit_code=$?
+    set -e
+
+    # Check if docker/podman is the issue
+    if [ $docker_exit_code -ne 0 ] && grep -q "Failed to run docker image\|podman\|netavark\|nftables" /tmp/ansible-test-output.log 2>/dev/null; then
+        cat /tmp/ansible-test-output.log
+        print_warning "Docker/Podman networking failed, retrying with --local mode"
+        echo ""
+
+        local local_cmd="ansible-test sanity --local"
+        if [ "$VERBOSE" = "true" ]; then
+            local_cmd="$local_cmd -v"
+        fi
+
+        print_info "Running: $local_cmd"
+        echo ""
+
+        if eval "$local_cmd"; then
+            print_success "Sanity tests passed (local mode)"
+            cd - > /dev/null
+            return 0
+        else
+            print_error "Sanity tests failed"
+            cd - > /dev/null
+            return 1
+        fi
+    elif [ $docker_exit_code -eq 0 ]; then
+        cat /tmp/ansible-test-output.log
         print_success "Sanity tests passed"
         cd - > /dev/null
         return 0
     else
+        cat /tmp/ansible-test-output.log
         print_error "Sanity tests failed"
         cd - > /dev/null
         return 1

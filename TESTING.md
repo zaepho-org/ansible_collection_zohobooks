@@ -181,9 +181,18 @@ Tested against multiple combinations of:
 
 **Solution:** The `test.sh` script automatically sets up the correct directory structure.
 
-### Issue: Docker not available
+### Issue: Docker/Podman networking errors (WSL2, nftables)
 
-**Solution:** Install Docker or use the `--local` flag with ansible-test (not recommended for consistency).
+**Solution:** The test script automatically falls back to `--local` mode when Docker/Podman fails. This is common in WSL2 environments. Local mode works fine for most testing needs.
+
+You may see errors like:
+
+```text
+Error: netavark: nftables error: "nft" did not return successfully
+Failed to run docker image
+```
+
+The tests will automatically retry with `--local` mode and continue.
 
 ### Issue: Sanity test failures about return value keys
 
