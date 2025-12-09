@@ -279,3 +279,6 @@ See [LICENSE](LICENSE) for the full license text.
 ## Author
 
 Kevin Colby ([@zaepho](https://github.com/zaepho))
+
+## AI Assistance Disclosure
+Portions of this code were generated or refined with the assistance of generative AI tools. All AI-generated code was reviewed, tested, and modified by the project author(s) to ensure accuracy and functionality.
