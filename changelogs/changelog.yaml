@@ -112,3 +112,11 @@ releases:
     fragments:
     - 0.2.1-release-pipline.yaml
     release_date: '2025-12-09'
+  0.2.3:
+    changes:
+      minor_changes:
+      - Updating pipeline until it works
+      release_summary: Automated publishing to Galaxy
+    fragments:
+    - 0.2.3-release-pipline-updates.yaml
+    release_date: '2025-12-09'

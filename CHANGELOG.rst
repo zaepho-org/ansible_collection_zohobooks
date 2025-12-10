@@ -4,6 +4,19 @@ zaepho.ZohoBooks Release Notes
 
 .. contents:: Topics
 
+v0.2.3
+======
+
+Release Summary
+---------------
+
+Automated publishing to Galaxy
+
+Minor Changes
+-------------
+
+- Updating pipeline until it works
+
 v0.2.1
 ======
 

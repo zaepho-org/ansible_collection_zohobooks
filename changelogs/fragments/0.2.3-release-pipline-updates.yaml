@@ -1,0 +1,4 @@
+---
+release_summary: Automated publishing to Galaxy
+minor_changes:
+  - Updating pipeline until it works

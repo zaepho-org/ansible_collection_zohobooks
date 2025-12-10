@@ -7,27 +7,12 @@ on:
 
 jobs:
   publish:
-    name: Publish collection to Ansible Galaxy
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout repo
+      uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install ansible-core
-        run: pip install ansible-core
-
-      - name: Build collection
-        run: ansible-galaxy collection build
-
-      - name: Publish collection to Galaxy
-        run: ansible-galaxy collection publish *.tar.gz
-        env:
-          ANSIBLE_GALAXY_SERVER_LIST: release_galaxy
-          ANSIBLE_GALAXY_SERVER_RELEASE_GALAXY_URL: https://galaxy.ansible.com/
-          ANSIBLE_GALAXY_TOKEN: ${{ secrets.GALAXY_API_KEY }}
+    - name: Deploy the collection
+      uses: artis3n/ansible_galaxy_collection@v2
+      with:
+        api_key: ${{ secrets.GALAXY_API_KEY }}
