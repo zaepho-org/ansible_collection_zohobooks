@@ -15,7 +15,7 @@ tags:
   - linux
   - zoho
 repository: https://github.com/zaepho-org/ansible_collection_zohobooks
-documentation: https://github.com/zaepho-org/ansible_collection_zohobooks/tree/main/docs
+documentation: https://zaepho-org.github.io/ansible_collection_zohobooks/
 homepage: https://github.com/zaepho-org/ansible_collection_zohobooks
 issues: https://github.com/zaepho-org/ansible_collection_zohobooks/issues
 build_ignore:
