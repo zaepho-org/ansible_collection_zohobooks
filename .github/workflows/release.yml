@@ -12,7 +12,7 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v2
 
-    - name: Deploy the collection
+    - name: Publish the collection
       uses: artis3n/ansible_galaxy_collection@v2
       with:
         api_key: ${{ secrets.GALAXY_API_KEY }}
