@@ -182,7 +182,7 @@ class ZohoBooksItemInfo:
         )
 
         if info['status'] not in [200, 201]:
-            error_msg = f"API request failed: {info['status']}"
+            error_msg = f"API request ({url}) failed: {info['status']}"
             if resp:
                 try:
                     error_data = json.loads(resp.read())
