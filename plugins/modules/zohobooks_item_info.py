@@ -61,7 +61,7 @@ options:
             - Can also be set via ZOHO_API_DOMAIN environment variable
         required: false
         type: str
-        default: 'https://books.zoho.com'
+        default: 'https://www.zohoapis.com'
 author:
     - Kevin Colby (@zaepho)
 '''
@@ -107,7 +107,7 @@ EXAMPLES = r'''
   environment:
     ZOHO_ORGANIZATION_ID: "123456789"
     ZOHO_ACCESS_TOKEN: "your_access_token"
-    ZOHO_API_DOMAIN: "https://books.zoho.com"
+    ZOHO_API_DOMAIN: "https://www.zohoapis.com"
   register: item
 
 - name: Display item information
@@ -154,7 +154,7 @@ class ZohoBooksItemInfo:
         self.org_id = module.params['organization_id']
         self.token = module.params['access_token']
         self.api_domain = module.params['api_domain']
-        self.base_url = f"{self.api_domain}/api/v3"
+        self.base_url = f"{self.api_domain}/books/v3"
 
     def _make_request(self, endpoint, method='GET', params=None):
         """Make HTTP request to ZohoBooks API"""
@@ -259,7 +259,7 @@ def main():
                 required=False,
                 choices=['Status.Active', 'Status.Inactive', 'Status.All']
             ),
-            api_domain=dict(type='str', default='https://books.zoho.com')
+            api_domain=dict(type='str', default='https://www.zohoapis.com')
         ),
         supports_check_mode=True,
         mutually_exclusive=[
@@ -273,7 +273,7 @@ def main():
     api_domain = module.params['api_domain']
 
     # Override api_domain from environment if not explicitly set and env var exists
-    if module.params['api_domain'] == 'https://books.zoho.com' and os.environ.get('ZOHO_API_DOMAIN'):
+    if module.params['api_domain'] == 'https://www.zohoapis.com' and os.environ.get('ZOHO_API_DOMAIN'):
         api_domain = os.environ.get('ZOHO_API_DOMAIN')
 
     # Validate required credentials
