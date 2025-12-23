@@ -196,17 +196,31 @@ class ZohoBooksItemInfo:
         return {}
 
     def get_all_items(self, filter_by=None):
-        """Retrieve all items"""
+        """Retrieve all items with automatic pagination"""
         params = {}
         if filter_by:
             params['filter_by'] = filter_by
 
-        response = self._make_request('items', params=params)
+        all_items = []
+        page = 1
+        has_more_page = True
 
-        if response.get('code') == 0:
-            return response.get('items', [])
+        while has_more_page:
+            params['page'] = page
+            response = self._make_request('items', params=params)
 
-        self.module.fail_json(msg=f"Failed to retrieve items: {response.get('message')}")
+            if response.get('code') == 0:
+                items = response.get('items', [])
+                all_items.extend(items)
+
+                # Check if there are more pages
+                page_context = response.get('page_context', {})
+                has_more_page = page_context.get('has_more_page', False)
+                page += 1
+            else:
+                self.module.fail_json(msg=f"Failed to retrieve items: {response.get('message')}")
+
+        return all_items
 
     def get_item_by_id(self, item_id):
         """Retrieve a specific item by ID"""

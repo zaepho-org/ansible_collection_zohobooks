@@ -187,18 +187,31 @@ class ZohoBooksVendorInfo:
         return {}
 
     def get_all_vendors(self, filter_by=None):
-        """Retrieve all vendors"""
-        endpoint = 'contacts?contact_type=vendor'
+        """Retrieve all vendors with automatic pagination"""
+        all_vendors = []
+        page = 1
+        has_more_page = True
 
-        if filter_by:
-            endpoint += f'&filter_by={filter_by}'
+        while has_more_page:
+            endpoint = f'contacts?contact_type=vendor&page={page}'
 
-        response = self._make_request(endpoint)
+            if filter_by:
+                endpoint += f'&filter_by={filter_by}'
 
-        if response.get('code') == 0:
-            return response.get('contacts', [])
+            response = self._make_request(endpoint)
 
-        self.module.fail_json(msg=f"Failed to retrieve vendors: {response.get('message')}")
+            if response.get('code') == 0:
+                contacts = response.get('contacts', [])
+                all_vendors.extend(contacts)
+
+                # Check if there are more pages
+                page_context = response.get('page_context', {})
+                has_more_page = page_context.get('has_more_page', False)
+                page += 1
+            else:
+                self.module.fail_json(msg=f"Failed to retrieve vendors: {response.get('message')}")
+
+        return all_vendors
 
     def get_vendor_by_id(self, contact_id):
         """Retrieve a specific vendor by ID"""

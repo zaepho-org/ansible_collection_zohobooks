@@ -159,13 +159,27 @@ class ZohoBooksAccountInfo:
         return {}
 
     def get_all_accounts(self):
-        """Retrieve all accounts"""
-        response = self._make_request('chartofaccounts')
+        """Retrieve all accounts with automatic pagination"""
+        all_accounts = []
+        page = 1
+        has_more_page = True
 
-        if response.get('code') == 0:
-            return response.get('chartofaccounts', [])
+        while has_more_page:
+            endpoint = f'chartofaccounts?page={page}'
+            response = self._make_request(endpoint)
 
-        self.module.fail_json(msg=f"Failed to retrieve accounts: {response.get('message')}")
+            if response.get('code') == 0:
+                accounts = response.get('chartofaccounts', [])
+                all_accounts.extend(accounts)
+
+                # Check if there are more pages
+                page_context = response.get('page_context', {})
+                has_more_page = page_context.get('has_more_page', False)
+                page += 1
+            else:
+                self.module.fail_json(msg=f"Failed to retrieve accounts: {response.get('message')}")
+
+        return all_accounts
 
     def get_account_by_id(self, account_id):
         """Retrieve a specific account by ID"""
